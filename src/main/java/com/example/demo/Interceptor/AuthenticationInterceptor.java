@@ -3,6 +3,8 @@ package com.example.demo.Interceptor;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.Claim;
+import com.example.demo.model.User;
+import com.example.demo.model.UserJwtInfo;
 import com.example.demo.service.UserService;
 import com.example.demo.token.UserLoginToken;
 import com.example.demo.utils.JwtTokenUtils;
@@ -14,13 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
 @Slf4j
 public class AuthenticationInterceptor implements HandlerInterceptor {
-    @Autowired
-    UserService userService;
+
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
@@ -42,23 +44,35 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (method.isAnnotationPresent(UserLoginToken.class)) {
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
             if (userLoginToken.required()) {
-                if (token == null) {
+                if (token == null || token == "") {
                     throw new RuntimeException("无token，请重新登录");
                 }
                 // 执行认证
                 log.info("被jwt拦截需要验证");
 
                 Map<String, Claim> claims = JwtTokenUtils.vertifyToken(token);
+                String  openId = null;
+                Object object2 = claims.get("open_id");
+                Class jsonClass = object2.getClass();
+                Field dataField = null;
+                dataField = jsonClass.getDeclaredField("data");
+                dataField.setAccessible(true);//设置data属性为可访问的
 
-                Object openID = claims.get("openid");
-                log.info(openID.toString());
-            }
-            /*
-                User user = userService.findUserById(userId);
-                if (user == null) {
-                    throw new RuntimeException("用户不存在，请重新登录");
+                try {
+                    //通过Field.get(Object)获取object的data(SubEvent)中的eventId属性
+                    UserJwtInfo userJwtInfo= (UserJwtInfo) dataField.get(object2);
+                    openId = userJwtInfo.getOpenId();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
-            */
+
+                //log.info(object2.getData());
+                //httpServletRequest.setAttribute("openid", object);
+                log.info(openId);
+            }
+
+
+
         }
         return true;
     }

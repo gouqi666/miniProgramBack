@@ -6,6 +6,7 @@ import com.example.demo.model.Result;
 import com.example.demo.model.SliderPic;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.OssService;
+import com.example.demo.service.UserService;
 import com.example.demo.token.UserLoginToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,8 +33,10 @@ public class AuthController {
     @Resource
     private OssService ossService;
 
+    @Autowired
+    UserService userService;
+
     @ResponseBody
-    @UserLoginToken
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Result<AuthUserDto> login(@RequestBody AuthUserDto authUserDto, HttpServletRequest request) throws Exception {
         log.info(authUserDto.toString());
@@ -75,7 +78,7 @@ public class AuthController {
         Result<String> result = new Result<>();
         return result.ok(url);
     }
-
+    @UserLoginToken
     @GetMapping(value = "/allSliderPic", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "获取所有轮播图图片")
     public Result<List<SliderPic>> getAllSliderPic() {

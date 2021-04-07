@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class UserService {
@@ -22,18 +24,23 @@ public class UserService {
     UserMapper userMapper;
 
     public Result<User> findByOpenId(String openid) {
-
         User user= userMapper.findByOpenId(openid);
         Result<User> resultUser =  new Result<>();
         return resultUser.ok(user);
     }
+
     public User create(User user) {
-       return  userMapper.save(user);
+        return  userMapper.save(user);
     }
+
     public Patient addPatient(Patient patient) {
-
+        userMapper.addPatient(patient);
+        return patient;
     }
 
+    public List<Patient> findPatientByUser(User user) {
+        return userMapper.findPatientByUser(user);
+    }
 
 
 }

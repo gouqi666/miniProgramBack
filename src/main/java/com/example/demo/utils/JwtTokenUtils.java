@@ -24,25 +24,25 @@ public class JwtTokenUtils {
 
     /**
      * 生成返回给客户端的token
-     * @param openid, session_key
+     * @param openId, session_key
      * @return token
      * @throws Exception
      */
-    public static String createToken(String openid, String session_key) throws Exception {
+    public static String createToken(String openId, String session_key) throws Exception {
         // Token产生时间点
         Date startDate = new Date();
 
         // 设置过期时间
         Calendar now = Calendar.getInstance();
         now.add(Calendar.HOUR, 24);
-        Date expireDate = now.getTime();
+        Date expireDate = now.getTime() ;
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("alg", "HS256");
         map.put("typ", "JWT");
         String token = JWT.create()
                 .withHeader(map)
-                .withClaim("openid", openid)
+                .withClaim("open_id", openId)
                 .withClaim("session_key",session_key)
                 .withExpiresAt(expireDate)      // 过期时间
                 .withIssuedAt(startDate)        // 签发时间

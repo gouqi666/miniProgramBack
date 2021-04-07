@@ -53,7 +53,7 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
                 //如果add为具体的匹配如“/hello”，下面的exclude不起作用,且controller层不匹配客户端请求时拦截器不起作用
 
                 //排除不需要验证登录用户操作权限的请求
-                .excludePathPatterns("/auth/login")
+                // .excludePathPatterns("/auth/login")
                 .excludePathPatterns("/css/**")
                 .excludePathPatterns("/js/**")
                 .excludePathPatterns("/images/**");
