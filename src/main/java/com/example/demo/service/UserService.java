@@ -4,6 +4,7 @@ import com.example.demo.constant.ConstantProperties;
 import com.example.demo.converter.WXMappingJackson2HttpMessageConverter;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.LoginResponse;
+import com.example.demo.model.Patient;
 import com.example.demo.model.Result;
 import com.example.demo.model.User;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,9 @@ public class UserService {
     }
     public User create(User user) {
        return  userMapper.save(user);
+    }
+    public Patient addPatient(Patient patient) {
+
     }
 
 
