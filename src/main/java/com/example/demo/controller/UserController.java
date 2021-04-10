@@ -8,6 +8,7 @@ import com.example.demo.token.UserLoginToken;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -32,14 +33,31 @@ public class UserController {
     @UserLoginToken
     @PostMapping("/addPatient")
     @ApiOperation(value = "添加就诊人")
-    public Patient addPatient(Patient patient) {
+    public Long addPatient(@RequestBody Patient patient) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        User user = userService.findByOpenId(request.getAttribute("open_id").toString()).getModule();
+        String openId = request.getAttribute("open_id").toString();
+        User user = userService.findByOpenId(openId).getModule();
         patient.setUser(user);
         return userService.addPatient(patient);
     }
-    public List<Patient> findPatientByUser (User user) {
-        return userService.findPatientByUser(user);
+
+    @ResponseBody
+    @UserLoginToken
+    @GetMapping(value = "/findPatientByUserId", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "查询用户添加的就诊人")
+    public List<Patient> findPatientByUserId () {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String openId = request.getAttribute("open_id").toString();
+        User user = userService.findByOpenId(openId).getModule();
+        return userService.findPatientByUserId(user.getId().toString());
+    }
+
+    @ResponseBody
+    @UserLoginToken
+    @PostMapping(value = "/deletePatientById", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ApiOperation(value = "删除就诊人")
+    public void deletePatientById (@RequestBody Patient patient) {
+         userService.deletePatientById(patient.getId().toString());
     }
 
 }

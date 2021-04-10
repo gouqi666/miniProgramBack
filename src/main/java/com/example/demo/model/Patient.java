@@ -14,6 +14,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -46,6 +47,9 @@ public class Patient implements Serializable {
     @Column(name ="phone_number")
     private String phoneNumber;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "create_time")
     @CreationTimestamp
     private Timestamp createTime;
@@ -53,5 +57,12 @@ public class Patient implements Serializable {
     @Column(name = "update_time")
     @UpdateTimestamp
     private Timestamp updateTime;
+
+    @ManyToMany
+    @JoinTable( name = "doctor_patient",
+            joinColumns={@JoinColumn(name="patient_id", referencedColumnName="id")},
+            inverseJoinColumns={@JoinColumn(name="doctor_id", referencedColumnName="id")}
+    )
+    public Set<Patient> doctors;
 
 }

@@ -69,7 +69,7 @@ public class AuthController {
         }
     }*/
 
-    //上传头像的方法
+    //上传轮播图的方法
     @PostMapping("/uploadSliderPic")
     @ApiOperation(value = "文件上传")
     public Result<String> uploadOssFile(MultipartFile file) {
@@ -78,7 +78,6 @@ public class AuthController {
         Result<String> result = new Result<>();
         return result.ok(url);
     }
-    @UserLoginToken
     @GetMapping(value = "/allSliderPic", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ApiOperation(value = "获取所有轮播图图片")
     public Result<List<SliderPic>> getAllSliderPic() {

@@ -10,6 +10,7 @@ import com.example.demo.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -33,14 +34,16 @@ public class UserService {
         return  userMapper.save(user);
     }
 
-    public Patient addPatient(Patient patient) {
-        userMapper.addPatient(patient);
-        return patient;
+    public Long addPatient(Patient patient) {
+        return userMapper.addPatient(patient);
     }
 
-    public List<Patient> findPatientByUser(User user) {
-        return userMapper.findPatientByUser(user);
+    public List<Patient> findPatientByUserId(String user_id) {
+        return userMapper.findPatientByUser(user_id);
     }
 
 
+    public void deletePatientById ( String id) {
+        userMapper.deletePatientById(id);
+    }
 }

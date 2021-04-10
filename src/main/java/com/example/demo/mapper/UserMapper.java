@@ -26,15 +26,15 @@ public interface UserMapper {
 
 
 
-    @Insert("insert into patient (name,id_number,phone_number,user_id) values" +
-            " (#{name},#{idNumber},#{phoneNumber},#{user.userId})")
-    @ResultType(Patient.class)
+    @Insert("insert into patient (name,id_number,phone_number,address,user_id,create_time) values" +
+            " (#{patient.name},#{patient.idNumber},#{patient.phoneNumber},#{patient.address},#{patient.user.id})")
+    @ResultType(Long.class)
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    Patient addPatient(Patient patient);
+    Long addPatient(@Param("patient")Patient patient);
 
 
 
-    @Select("select * from patient where user_id = #{userId}")
+    @Select("select * from patient where user_id = #{id}")
     @Results({
             @Result(id = true, column = "id", property = "id"),
             @Result(column = "create_time", property = "createTime"),
@@ -42,5 +42,9 @@ public interface UserMapper {
             // @Result(column = "update_time", property = "updateTime"),
     })
     @ResultType(Patient.class)
-    List<Patient> findPatientByUser(User user);
+    List<Patient> findPatientByUser(@Param("id") String user_id);
+
+
+    @Delete("delete from patient where id = #{id}")
+    Long deletePatientById(@Param("id")String id);
 }

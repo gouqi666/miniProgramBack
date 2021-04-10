@@ -1,5 +1,7 @@
 package com.example.demo.Interceptor;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.Claim;
@@ -52,22 +54,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
                 Map<String, Claim> claims = JwtTokenUtils.vertifyToken(token);
                 String  openId = null;
-                Object object2 = claims.get("open_id");
-                Class jsonClass = object2.getClass();
-                Field dataField = null;
-                dataField = jsonClass.getDeclaredField("data");
-                dataField.setAccessible(true);//设置data属性为可访问的
+                Claim openIdClaim = claims.get("open_id");
+                openId = openIdClaim.asString();
 
-                try {
-                    //通过Field.get(Object)获取object的data(SubEvent)中的eventId属性
-                    UserJwtInfo userJwtInfo= (UserJwtInfo) dataField.get(object2);
-                    openId = userJwtInfo.getOpenId();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-
-                //log.info(object2.getData());
-                //httpServletRequest.setAttribute("openid", object);
+                httpServletRequest.setAttribute("open_id", openId);
                 log.info(openId);
             }
 

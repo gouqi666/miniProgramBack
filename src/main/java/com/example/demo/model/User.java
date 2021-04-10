@@ -19,6 +19,8 @@ import java.util.Set;
 @Builder
 @Data
 @ToString(callSuper = true)
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements Serializable {
